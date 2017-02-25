@@ -29817,7 +29817,7 @@ $packages["github.com/dedis/crypto/eddsa"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/dedis/crypto-js/keys"] = (function() {
-	var $pkg = {}, $init, cipher, hex, ed25519, eddsa, js, keyPair, constantStream, ptrType, sliceType, ptrType$1, ConstantStream, GeneratePublicFromSecret, GenerateSecretAndPublic, Sign, Verify;
+	var $pkg = {}, $init, cipher, hex, ed25519, eddsa, js, keyPair, constantStream, ptrType, sliceType, ptrType$1, ConstantStream, GeneratePublicFromSecret, GenerateSecretAndPublic, Sign, Verify, AggregateKeys;
 	cipher = $packages["crypto/cipher"];
 	hex = $packages["encoding/hex"];
 	ed25519 = $packages["github.com/dedis/crypto/ed25519"];
@@ -29934,6 +29934,35 @@ $packages["github.com/dedis/crypto-js/keys"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: Verify }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.buffer = buffer; $f.msg = msg; $f.msgBuffer = msgBuffer; $f.pubkey = pubkey; $f.public$1 = public$1; $f.signature = signature; $f.signatureBuffer = signatureBuffer; $f.suite = suite; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.Verify = Verify;
+	AggregateKeys = function(keys) {
+		var $ptr, _i, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _ref, _tuple, _tuple$1, aggKey, aggKeyString, buffer, k, keys, public$1, suite, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; aggKey = $f.aggKey; aggKeyString = $f.aggKeyString; buffer = $f.buffer; k = $f.k; keys = $f.keys; public$1 = $f.public$1; suite = $f.suite; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		suite = ed25519.NewAES128SHA256Ed25519(false);
+		_r = suite.Point(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r$1 = _r.Null(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		aggKey = _r$1;
+		_ref = keys;
+		_i = 0;
+		/* while (true) { */ case 3:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 4; continue; }
+			k = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			_r$2 = suite.Point(); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			public$1 = _r$2;
+			_tuple = hex.DecodeString(k);
+			buffer = _tuple[0];
+			_r$3 = public$1.UnmarshalBinary(buffer); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			_r$3;
+			_r$4 = aggKey.Add(aggKey, public$1); /* */ $s = 7; case 7: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_r$4;
+			_i++;
+		/* } */ $s = 3; continue; case 4:
+		_r$5 = aggKey.MarshalBinary(); /* */ $s = 8; case 8: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+		_tuple$1 = _r$5;
+		aggKeyString = _tuple$1[0];
+		$s = -1; return hex.EncodeToString(aggKeyString);
+		/* */ } return; } if ($f === undefined) { $f = { $blk: AggregateKeys }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.aggKey = aggKey; $f.aggKeyString = aggKeyString; $f.buffer = buffer; $f.k = k; $f.keys = keys; $f.public$1 = public$1; $f.suite = suite; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.AggregateKeys = AggregateKeys;
 	ptrType.methods = [{prop: "Public", name: "Public", pkg: "", typ: $funcType([], [$String], false)}, {prop: "Private", name: "Private", pkg: "", typ: $funcType([], [$String], false)}];
 	ptrType$1.methods = [{prop: "XORKeyStream", name: "XORKeyStream", pkg: "", typ: $funcType([sliceType, sliceType], [], false)}];
 	keyPair.init("github.com/dedis/crypto-js/keys", [{prop: "public$0", name: "public", exported: false, typ: $String, tag: ""}, {prop: "private$1", name: "private", exported: false, typ: $String, tag: ""}]);
@@ -29952,7 +29981,7 @@ $packages["github.com/dedis/crypto-js/keys"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/dedis/crypto-js"] = (function() {
-	var $pkg = {}, $init, keys, js, ptrType, funcType, funcType$1, funcType$2, funcType$3, mapType, main;
+	var $pkg = {}, $init, keys, js, ptrType, funcType, funcType$1, funcType$2, funcType$3, sliceType, funcType$4, mapType, main;
 	keys = $packages["github.com/dedis/crypto-js/keys"];
 	js = $packages["github.com/gopherjs/gopherjs/js"];
 	ptrType = $ptrType(js.Object);
@@ -29960,10 +29989,12 @@ $packages["github.com/dedis/crypto-js"] = (function() {
 	funcType$1 = $funcType([$String], [ptrType], false);
 	funcType$2 = $funcType([$String, $String], [$String], false);
 	funcType$3 = $funcType([$String, $String, $String], [$error], false);
+	sliceType = $sliceType($String);
+	funcType$4 = $funcType([sliceType], [$String], false);
 	mapType = $mapType($String, $emptyInterface);
 	main = function() {
 		var $ptr;
-		$global.cryptoJS = $externalize($makeMap($String.keyFor, [{ k: "GenerateSecretAndPublic", v: new funcType(keys.GenerateSecretAndPublic) }, { k: "GeneratePublicFromSecret", v: new funcType$1(keys.GeneratePublicFromSecret) }, { k: "Sign", v: new funcType$2(keys.Sign) }, { k: "Verify", v: new funcType$3(keys.Verify) }]), mapType);
+		$global.cryptoJS = $externalize($makeMap($String.keyFor, [{ k: "GenerateSecretAndPublic", v: new funcType(keys.GenerateSecretAndPublic) }, { k: "GeneratePublicFromSecret", v: new funcType$1(keys.GeneratePublicFromSecret) }, { k: "Sign", v: new funcType$2(keys.Sign) }, { k: "Verify", v: new funcType$3(keys.Verify) }, { k: "Aggregate", v: new funcType$4(keys.AggregateKeys) }]), mapType);
 	};
 	$init = function() {
 		$pkg.$init = function() {};

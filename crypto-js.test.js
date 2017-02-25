@@ -30,6 +30,17 @@ const MOCK_KEYS = [{
   signature: "0aab4c900501b3e24d7cdf4663326a3a87df5e4843b2cbdb67cbf6e460fec350aa5371b1508f9f4528ecea23c436d94b5e8fcd4f681e30a6ac00a9704a188a03"},
 ];
 
+const MOCK_PUBLIC_KEYS = [
+  "e5e23e58539a09d3211d8fa0fb3475d48655e0c06d83e93c8e6e7d16aa87c106",
+  "036bf316e1ea6e7e99e0bb713419d16c0b6794bf9dc442cc4cf36c3f935e93cf",
+  "9b54fdfbb39138f0a45a08e1721ab4eb257e0f246c93a272154d651454756290",
+  "52c6a77c756ce5f3bef3414006c45556aeb7084c0f3e4467dd27107927912c51",
+  "82e864d06230daa2e90a1ac24ec738bcd9e5458677e75f1e64a9b514a711d630",
+  "588addc1fbd9c403868e0d0ac2003e7c7538d0a9154fbdb3cf772822f0ebc827"
+];
+
+const MOCK_AGG_RESULT = "688d8bfddea6f413a29e32c8ff0a1fb603beac0e719e7a395b3ad52ce1623246";
+
 describe('crypto-js', () => {
 
   it('it should produce the same public key and signature', () => {
@@ -44,6 +55,12 @@ describe('crypto-js', () => {
 
       expect(cryptoJS.Verify(keys.Public(), mock.msg, mock.private)).toBeTruthy();
     });
+  });
+
+  it('should aggregate correctly', () => {
+    const agg = cryptoJS.Aggregate(MOCK_PUBLIC_KEYS);
+
+    expect(agg).toBe(MOCK_AGG_RESULT);
   });
 
 });

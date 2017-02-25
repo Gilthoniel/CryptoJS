@@ -11,5 +11,6 @@ func main() {
         "GeneratePublicFromSecret": keys.GeneratePublicFromSecret,
         "Sign": keys.Sign,
         "Verify": keys.Verify,
+        "Aggregate": keys.AggregateKeys,
     })
 }

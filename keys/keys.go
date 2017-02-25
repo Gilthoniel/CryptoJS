@@ -52,3 +52,19 @@ func Verify(pubkey string, msg, signature string) error {
     signatureBuffer, _ := hex.DecodeString(signature)
     return eddsa.Verify(public, msgBuffer, signatureBuffer)
 }
+
+func AggregateKeys(keys []string) string {
+    suite := ed25519.NewAES128SHA256Ed25519(false)
+    aggKey := suite.Point().Null()
+
+    for _, k := range keys {
+        public := suite.Point()
+        buffer, _ := hex.DecodeString(k)
+        public.UnmarshalBinary(buffer)
+
+        aggKey.Add(aggKey, public)
+    }
+
+    aggKeyString, _ := aggKey.MarshalBinary()
+    return hex.EncodeToString(aggKeyString)
+}
