@@ -2,15 +2,21 @@ package main
 
 import (
     "github.com/gopherjs/gopherjs/js"
-    "github.com/dedis/crypto-js/keys"
+    "github.com/dedis/crypto-js/crypto"
 )
 
+/**
+ * Encapsulate the library in the cryptoJS object that you can
+ * find the global JS object
+ */
 func main() {
     js.Global.Set("cryptoJS", map[string]interface{}{
-        "GenerateSecretAndPublic": keys.GenerateSecretAndPublic,
-        "GeneratePublicFromSecret": keys.GeneratePublicFromSecret,
-        "Sign": keys.Sign,
-        "Verify": keys.Verify,
-        "Aggregate": keys.AggregateKeys,
+        "generatePrivateKey": crypto.GeneratePrivateKey,
+        "generatePublicKey": crypto.GeneratePublicKey,
+        "sign": crypto.Sign,
+        "verify": crypto.Verify,
+        "aggregateKeys": crypto.AggregateKeys,
+        "sha256": crypto.Sha256,
+        "sha512": crypto.Sha512,
     })
 }

@@ -41,26 +41,54 @@ const MOCK_PUBLIC_KEYS = [
 
 const MOCK_AGG_RESULT = "688d8bfddea6f413a29e32c8ff0a1fb603beac0e719e7a395b3ad52ce1623246";
 
+const MOCK_HASH = [{
+  value: '',
+  sha256: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+  sha512: 'cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
+},{
+  value: 'This is a mock message used to test the hash functions',
+  sha256: '6a88e4e7ffb58d3307d5ce3579cdc019e47b5990f03cd9b26356af81079944c1',
+  sha512: 'b2d28852a63d7cb08b4f188f3306a86ef672b5c8b3ac9db6bcf9d496cb19129d8ccbc3de4a6084a3af182121ca2c12c7996bb6fcaec8494b067b6fdaa060074e'
+}];
+
 describe('crypto-js', () => {
 
   it('it should produce the same public key and signature', () => {
     expect.assertions(MOCK_KEYS.length * 3);
 
     MOCK_KEYS.forEach((mock) => {
-      const keys = cryptoJS.GeneratePublicFromSecret(mock.private);
-      expect(keys.Public()).toBe(mock.public);
+      const pubKey = cryptoJS.generatePublicKey(mock.private);
+      expect(pubKey).toBe(mock.public);
 
-      const signature = cryptoJS.Sign(mock.private, mock.msg);
+      const signature = cryptoJS.sign(mock.private, mock.msg);
       expect(signature).toBe(mock.signature);
 
-      expect(cryptoJS.Verify(keys.Public(), mock.msg, mock.private)).toBeTruthy();
+      expect(cryptoJS.verify(pubKey, mock.msg, mock.private)).toBeTruthy();
     });
   });
 
   it('should aggregate correctly', () => {
-    const agg = cryptoJS.Aggregate(MOCK_PUBLIC_KEYS);
+    const agg = cryptoJS.aggregateKeys(MOCK_PUBLIC_KEYS);
 
     expect(agg).toBe(MOCK_AGG_RESULT);
+  });
+
+  it('should hash (sha256) correctly', () => {
+    expect.assertions(MOCK_HASH.length);
+
+    MOCK_HASH.forEach((mock) => {
+      const hash = cryptoJS.sha256(mock.value);
+      expect(hash).toBe(mock.sha256);
+    });
+  });
+
+  it('should hash (sha512) correctly', () => {
+    expect.assertions(MOCK_HASH.length);
+
+    MOCK_HASH.forEach((mock) => {
+      const hash = cryptoJS.sha512(mock.value);
+      expect(hash).toBe(mock.sha512);
+    });
   });
 
 });

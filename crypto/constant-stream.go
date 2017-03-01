@@ -1,21 +1,6 @@
-package keys
+package crypto
 
-import (
-    "crypto/cipher"
-)
-
-type keyPair struct {
-    public string
-    private string
-}
-
-func (k *keyPair) Public() string {
-    return k.public
-}
-
-func (k *keyPair) Private() string {
-    return k.private
-}
+import "crypto/cipher"
 
 type constantStream struct {
     seed []byte
