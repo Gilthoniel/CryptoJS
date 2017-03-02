@@ -1,4 +1,5 @@
 import './crypto-js'
+import ByteBuffer from 'bytebuffer'
 
 window.crypto = {
   getRandomValues(array) {
@@ -57,28 +58,29 @@ describe('crypto-js', () => {
     expect.assertions(MOCK_KEYS.length * 3);
 
     MOCK_KEYS.forEach((mock) => {
-      const pubKey = cryptoJS.generatePublicKey(mock.private);
-      expect(pubKey).toBe(mock.public);
+      const pubKey = cryptoJS.keyPairPublic(hex2buf(mock.private));
 
-      const signature = cryptoJS.sign(mock.private, mock.msg);
-      expect(signature).toBe(mock.signature);
+      expect(buf2hex(pubKey)).toBe(mock.public);
 
-      expect(cryptoJS.verify(pubKey, mock.msg, mock.private)).toBeTruthy();
+      const signature = cryptoJS.sign(hex2buf(mock.private), hex2buf(mock.msg));
+      expect(buf2hex(signature)).toBe(mock.signature);
+
+      expect(cryptoJS.verify(pubKey, hex2buf(mock.msg), hex2buf(mock.private))).toBeTruthy();
     });
   });
 
   it('should aggregate correctly', () => {
-    const agg = cryptoJS.aggregateKeys(MOCK_PUBLIC_KEYS);
+    const agg = cryptoJS.aggregateKeys(MOCK_PUBLIC_KEYS.map(k => hex2buf(k)));
 
-    expect(agg).toBe(MOCK_AGG_RESULT);
+    expect(buf2hex(agg)).toBe(MOCK_AGG_RESULT);
   });
 
   it('should hash (sha256) correctly', () => {
     expect.assertions(MOCK_HASH.length);
 
     MOCK_HASH.forEach((mock) => {
-      const hash = cryptoJS.sha256(mock.value);
-      expect(hash).toBe(mock.sha256);
+      const hash = cryptoJS.sha256(stringToUint(mock.value));
+      expect(buf2hex(hash)).toBe(mock.sha256);
     });
   });
 
@@ -86,9 +88,26 @@ describe('crypto-js', () => {
     expect.assertions(MOCK_HASH.length);
 
     MOCK_HASH.forEach((mock) => {
-      const hash = cryptoJS.sha512(mock.value);
-      expect(hash).toBe(mock.sha512);
+      const hash = cryptoJS.sha512(stringToUint(mock.value));
+      expect(buf2hex(hash)).toBe(mock.sha512);
     });
   });
 
 });
+
+function hex2buf(hex) {
+  return new Uint8Array(ByteBuffer.fromHex(hex).buffer);
+}
+
+function buf2hex(buf) {
+  return ByteBuffer.wrap(buf).toHex();
+}
+
+function stringToUint(string) {
+  const uintArray = [];
+  for (let i = 0; i < string.length; i++) {
+    uintArray.push(string.charCodeAt(i))
+  }
+
+  return new Uint8Array(uintArray);
+}

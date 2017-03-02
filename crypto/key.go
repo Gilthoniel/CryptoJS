@@ -1,42 +1,38 @@
 package crypto
 
 import (
-    "encoding/hex"
     "github.com/dedis/crypto/eddsa"
     "github.com/dedis/crypto/ed25519"
 )
 
-// Generate a random private key for an EdDSA signature
-func GeneratePrivateKey() string {
-    keys := eddsa.NewEdDSA(nil)
+// Return a byte array representation of the key pair
+func KeyPairEdDSA() []byte {
+    e := eddsa.NewEdDSA(nil)
 
-    dataSecret, _ := keys.Secret.MarshalBinary()
-    return hex.EncodeToString(dataSecret)
+    result, _ := e.Secret.MarshalBinary()
+    return result
 }
 
-// Generate the public key given the private key for an EdDSA signature
-func GeneratePublicKey(privateKey string) string {
-    buffer, _ := hex.DecodeString(privateKey)
-    stream := ConstantStream(buffer)
+func KeyPairPublic(secret []byte) []byte {
+    stream := ConstantStream(secret)
+    e := eddsa.NewEdDSA(stream)
 
-    keys := eddsa.NewEdDSA(stream)
-    dataPublic, _ := keys.Public.MarshalBinary()
-    return hex.EncodeToString(dataPublic)
+    result, _ := e.Public.MarshalBinary()
+    return result
 }
 
 // Aggregate the given public keys in one single key
-func AggregateKeys(keys []string) string {
+func AggregateKeys(keys [][]byte) []byte {
     suite := ed25519.NewAES128SHA256Ed25519(false)
     aggKey := suite.Point().Null()
 
     for _, k := range keys {
         public := suite.Point()
-        buffer, _ := hex.DecodeString(k)
-        public.UnmarshalBinary(buffer)
+        public.UnmarshalBinary(k)
 
         aggKey.Add(aggKey, public)
     }
 
-    aggKeyString, _ := aggKey.MarshalBinary()
-    return hex.EncodeToString(aggKeyString)
+    result, _ := aggKey.MarshalBinary()
+    return result
 }
