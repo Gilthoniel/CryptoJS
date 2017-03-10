@@ -73,6 +73,13 @@ describe('crypto-js', () => {
     });
   });
 
+  it('should sign and verify', () => {
+    const marshal = cryptoJS.keyPair();
+    const sign = cryptoJS.sign(marshal, new Uint8Array([5, 5, 5, 5]));
+
+    expect(cryptoJS.verify(cryptoJS.publicKey(marshal), new Uint8Array([5, 5, 5, 5]), sign)).toBeTruthy();
+  });
+
   it('should aggregate correctly', () => {
     const agg = cryptoJS.aggregateKeys(MOCK_PUBLIC_KEYS.map(k => hex2buf(k)));
 
