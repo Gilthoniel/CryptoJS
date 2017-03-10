@@ -29495,7 +29495,7 @@ $packages["github.com/dedis/crypto/ed25519"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/dedis/crypto/eddsa"] = (function() {
-	var $pkg = {}, $init, cipher, sha512, errors, fmt, abstract$1, ed25519, random, EdDSA, arrayType, sliceType, sliceType$1, ptrType, suite, NewEdDSA, Verify;
+	var $pkg = {}, $init, cipher, sha512, errors, fmt, abstract$1, ed25519, random, EdDSA, arrayType, sliceType, sliceType$1, ptrType, suite, NewEdDSA, Verify, hashSeed;
 	cipher = $packages["crypto/cipher"];
 	sha512 = $packages["crypto/sha512"];
 	errors = $packages["errors"];
@@ -29529,11 +29529,8 @@ $packages["github.com/dedis/crypto/eddsa"] = (function() {
 		}
 		_r = random.NonZeroBytes(32, stream); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		buffer = _r;
-		_r$1 = sha512.Sum512(buffer); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$1 = hashSeed(buffer); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		scalar = $clone(_r$1, arrayType);
-		scalar[0] = ((scalar[0] & (248)) >>> 0);
-		scalar[31] = ((scalar[31] & (63)) >>> 0);
-		scalar[31] = ((scalar[31] | (64)) >>> 0);
 		_r$2 = suite.Scalar(); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 		_r$3 = _r$2.SetBytes($subslice(new sliceType(scalar), 0, 32)); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 		secret = _r$3;
@@ -29571,22 +29568,24 @@ $packages["github.com/dedis/crypto/eddsa"] = (function() {
 	};
 	EdDSA.prototype.MarshalBinary = function() { return this.$val.MarshalBinary(); };
 	EdDSA.ptr.prototype.UnmarshalBinary = function(buff) {
-		var $ptr, _r, _r$1, _r$2, _r$3, buff, e, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; buff = $f.buff; e = $f.e; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _r, _r$1, _r$2, _r$3, _r$4, buff, e, scalar, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; buff = $f.buff; e = $f.e; scalar = $f.scalar; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		e = this;
 		if (!((buff.$length === 64))) {
 			$s = -1; return errors.New("wrong length for decoding EdDSA private");
 		}
 		e.seed = $subslice(buff, 0, 32);
-		e.prefix = $subslice(buff, 32, 64);
-		_r = suite.Scalar(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_r$1 = _r.SetBytes(e.seed); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		e.Secret = _r$1;
-		_r$2 = suite.Point(); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_r$3 = _r$2.Mul($ifaceNil, e.Secret); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		e.Public = _r$3;
+		_r = hashSeed(e.seed); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		scalar = $clone(_r, arrayType);
+		e.prefix = $subslice(new sliceType(scalar), 32);
+		_r$1 = suite.Scalar(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$2 = _r$1.SetBytes($subslice(new sliceType(scalar), 0, 32)); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		e.Secret = _r$2;
+		_r$3 = suite.Point(); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_r$4 = _r$3.Mul($ifaceNil, e.Secret); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		e.Public = _r$4;
 		$s = -1; return $ifaceNil;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: EdDSA.ptr.prototype.UnmarshalBinary }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f.buff = buff; $f.e = e; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: EdDSA.ptr.prototype.UnmarshalBinary }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f.buff = buff; $f.e = e; $f.scalar = scalar; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	EdDSA.prototype.UnmarshalBinary = function(buff) { return this.$val.UnmarshalBinary(buff); };
 	EdDSA.ptr.prototype.Sign = function(msg) {
@@ -29706,6 +29705,18 @@ $packages["github.com/dedis/crypto/eddsa"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: Verify }; } $f.$ptr = $ptr; $f.Pbuff = Pbuff; $f.R = R; $f.RhA = RhA; $f.S = S; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$14 = _r$14; $f._r$15 = _r$15; $f._r$16 = _r$16; $f._r$17 = _r$17; $f._r$18 = _r$18; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tuple = _tuple; $f.err = err; $f.err$1 = err$1; $f.h = h; $f.hA = hA; $f.hash = hash; $f.msg = msg; $f.public$1 = public$1; $f.s = s; $f.sig = sig; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.Verify = Verify;
+	hashSeed = function(seed) {
+		var $ptr, _r, hash, seed, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; hash = $f.hash; seed = $f.seed; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		hash = arrayType.zero();
+		_r = sha512.Sum512(seed); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		arrayType.copy(hash, _r);
+		hash[0] = ((hash[0] & (248)) >>> 0);
+		hash[31] = ((hash[31] & (63)) >>> 0);
+		hash[31] = ((hash[31] | (64)) >>> 0);
+		$s = -1; return hash;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: hashSeed }; } $f.$ptr = $ptr; $f._r = _r; $f.hash = hash; $f.seed = seed; $f.$s = $s; $f.$r = $r; return $f;
+	};
 	ptrType.methods = [{prop: "Prefix", name: "Prefix", pkg: "", typ: $funcType([], [sliceType], false)}, {prop: "MarshalBinary", name: "MarshalBinary", pkg: "", typ: $funcType([], [sliceType, $error], false)}, {prop: "UnmarshalBinary", name: "UnmarshalBinary", pkg: "", typ: $funcType([sliceType], [$error], false)}, {prop: "Sign", name: "Sign", pkg: "", typ: $funcType([sliceType], [sliceType, $error], false)}];
 	EdDSA.init("github.com/dedis/crypto/eddsa", [{prop: "seed", name: "seed", exported: false, typ: sliceType, tag: ""}, {prop: "prefix", name: "prefix", exported: false, typ: sliceType, tag: ""}, {prop: "Secret", name: "Secret", exported: true, typ: abstract$1.Scalar, tag: ""}, {prop: "Public", name: "Public", exported: true, typ: abstract$1.Point, tag: ""}]);
 	$init = function() {
@@ -29725,33 +29736,13 @@ $packages["github.com/dedis/crypto/eddsa"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/dedis/crypto-js/crypto"] = (function() {
-	var $pkg = {}, $init, cipher, sha256, sha512, ed25519, eddsa, constantStream, sliceType, ptrType, ConstantStream, Sha256, Sha512, KeyPairEdDSA, KeyPairPublic, AggregateKeys, Sign, Verify;
+	var $pkg = {}, $init, cipher, sha256, sha512, ed25519, eddsa, sliceType, Sha256, Sha512, KeyPairEdDSA, KeyPairFromPrivate, PublicKey, AggregateKeys, Sign, Verify;
 	cipher = $packages["crypto/cipher"];
 	sha256 = $packages["crypto/sha256"];
 	sha512 = $packages["crypto/sha512"];
 	ed25519 = $packages["github.com/dedis/crypto/ed25519"];
 	eddsa = $packages["github.com/dedis/crypto/eddsa"];
-	constantStream = $pkg.constantStream = $newType(0, $kindStruct, "crypto.constantStream", true, "github.com/dedis/crypto-js/crypto", false, function(seed_) {
-		this.$val = this;
-		if (arguments.length === 0) {
-			this.seed = sliceType.nil;
-			return;
-		}
-		this.seed = seed_;
-	});
 	sliceType = $sliceType($Uint8);
-	ptrType = $ptrType(constantStream);
-	ConstantStream = function(buff) {
-		var $ptr, buff;
-		return new constantStream.ptr(buff);
-	};
-	$pkg.ConstantStream = ConstantStream;
-	constantStream.ptr.prototype.XORKeyStream = function(dst, src) {
-		var $ptr, cs, dst, src;
-		cs = this;
-		$copySlice(dst, cs.seed);
-	};
-	constantStream.prototype.XORKeyStream = function(dst, src) { return this.$val.XORKeyStream(dst, src); };
 	Sha256 = function(bytes) {
 		var $ptr, _r, _r$1, bytes, hash, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; bytes = $f.bytes; hash = $f.hash; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -29779,26 +29770,33 @@ $packages["github.com/dedis/crypto-js/crypto"] = (function() {
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; e = $f.e; result = $f.result; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		_r = eddsa.NewEdDSA($ifaceNil); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		e = _r;
-		_r$1 = e.Secret.MarshalBinary(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$1 = e.MarshalBinary(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		_tuple = _r$1;
 		result = _tuple[0];
 		$s = -1; return result;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: KeyPairEdDSA }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f.e = e; $f.result = result; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.KeyPairEdDSA = KeyPairEdDSA;
-	KeyPairPublic = function(secret) {
-		var $ptr, _r, _r$1, _tuple, e, result, secret, stream, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; e = $f.e; result = $f.result; secret = $f.secret; stream = $f.stream; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		stream = ConstantStream(secret);
-		_r = eddsa.NewEdDSA(stream); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		e = _r;
-		_r$1 = e.Public.MarshalBinary(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+	KeyPairFromPrivate = function(privateKey) {
+		var $ptr, _r, _r$1, _tuple, buf, e, privateKey, result, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; buf = $f.buf; e = $f.e; privateKey = $f.privateKey; result = $f.result; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		buf = $makeSlice(sliceType, 64);
+		$copySlice($subslice(buf, 0, 32), privateKey);
+		e = new eddsa.EdDSA.ptr(sliceType.nil, sliceType.nil, $ifaceNil, $ifaceNil);
+		_r = e.UnmarshalBinary(buf); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r;
+		_r$1 = e.MarshalBinary(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		_tuple = _r$1;
 		result = _tuple[0];
 		$s = -1; return result;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: KeyPairPublic }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f.e = e; $f.result = result; $f.secret = secret; $f.stream = stream; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: KeyPairFromPrivate }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f.buf = buf; $f.e = e; $f.privateKey = privateKey; $f.result = result; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	$pkg.KeyPairPublic = KeyPairPublic;
+	$pkg.KeyPairFromPrivate = KeyPairFromPrivate;
+	PublicKey = function(marshal) {
+		var $ptr, marshal;
+		return $subslice(marshal, 32);
+	};
+	$pkg.PublicKey = PublicKey;
 	AggregateKeys = function(keys) {
 		var $ptr, _i, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _ref, _tuple, aggKey, k, keys, public$1, result, suite, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _ref = $f._ref; _tuple = $f._tuple; aggKey = $f.aggKey; k = $f.k; keys = $f.keys; public$1 = $f.public$1; result = $f.result; suite = $f.suite; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -29826,17 +29824,17 @@ $packages["github.com/dedis/crypto-js/crypto"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: AggregateKeys }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._ref = _ref; $f._tuple = _tuple; $f.aggKey = aggKey; $f.k = k; $f.keys = keys; $f.public$1 = public$1; $f.result = result; $f.suite = suite; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.AggregateKeys = AggregateKeys;
-	Sign = function(secret, message) {
-		var $ptr, _r, _r$1, _tuple, e, message, secret, signed, stream, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; e = $f.e; message = $f.message; secret = $f.secret; signed = $f.signed; stream = $f.stream; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		stream = ConstantStream(secret);
-		_r = eddsa.NewEdDSA(stream); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		e = _r;
+	Sign = function(marshal, message) {
+		var $ptr, _r, _r$1, _tuple, e, marshal, message, signed, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; e = $f.e; marshal = $f.marshal; message = $f.message; signed = $f.signed; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		e = new eddsa.EdDSA.ptr(sliceType.nil, sliceType.nil, $ifaceNil, $ifaceNil);
+		_r = e.UnmarshalBinary(marshal); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r;
 		_r$1 = e.Sign(message); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		_tuple = _r$1;
 		signed = _tuple[0];
 		$s = -1; return signed;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Sign }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f.e = e; $f.message = message; $f.secret = secret; $f.signed = signed; $f.stream = stream; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Sign }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f.e = e; $f.marshal = marshal; $f.message = message; $f.signed = signed; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.Sign = Sign;
 	Verify = function(pubkey, msg, signature) {
@@ -29848,12 +29846,10 @@ $packages["github.com/dedis/crypto-js/crypto"] = (function() {
 		_r$1 = public$1.UnmarshalBinary(pubkey); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		_r$1;
 		_r$2 = eddsa.Verify(public$1, msg, signature); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		$s = -1; return _r$2;
+		$s = -1; return $interfaceIsEqual(_r$2, $ifaceNil);
 		/* */ } return; } if ($f === undefined) { $f = { $blk: Verify }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f.msg = msg; $f.pubkey = pubkey; $f.public$1 = public$1; $f.signature = signature; $f.suite = suite; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.Verify = Verify;
-	ptrType.methods = [{prop: "XORKeyStream", name: "XORKeyStream", pkg: "", typ: $funcType([sliceType, sliceType], [], false)}];
-	constantStream.init("github.com/dedis/crypto-js/crypto", [{prop: "seed", name: "seed", exported: false, typ: sliceType, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -29875,13 +29871,13 @@ $packages["github.com/dedis/crypto-js"] = (function() {
 	funcType = $funcType([], [sliceType], false);
 	funcType$1 = $funcType([sliceType], [sliceType], false);
 	funcType$2 = $funcType([sliceType, sliceType], [sliceType], false);
-	funcType$3 = $funcType([sliceType, sliceType, sliceType], [$error], false);
+	funcType$3 = $funcType([sliceType, sliceType, sliceType], [$Bool], false);
 	sliceType$1 = $sliceType(sliceType);
 	funcType$4 = $funcType([sliceType$1], [sliceType], false);
 	mapType = $mapType($String, $emptyInterface);
 	main = function() {
 		var $ptr;
-		$global.cryptoJS = $externalize($makeMap($String.keyFor, [{ k: "keyPair", v: new funcType(crypto.KeyPairEdDSA) }, { k: "keyPairPublic", v: new funcType$1(crypto.KeyPairPublic) }, { k: "sign", v: new funcType$2(crypto.Sign) }, { k: "verify", v: new funcType$3(crypto.Verify) }, { k: "aggregateKeys", v: new funcType$4(crypto.AggregateKeys) }, { k: "sha256", v: new funcType$1(crypto.Sha256) }, { k: "sha512", v: new funcType$1(crypto.Sha512) }]), mapType);
+		$global.cryptoJS = $externalize($makeMap($String.keyFor, [{ k: "keyPair", v: new funcType(crypto.KeyPairEdDSA) }, { k: "keyPairFromPrivate", v: new funcType$1(crypto.KeyPairFromPrivate) }, { k: "publicKey", v: new funcType$1(crypto.PublicKey) }, { k: "sign", v: new funcType$2(crypto.Sign) }, { k: "verify", v: new funcType$3(crypto.Verify) }, { k: "aggregateKeys", v: new funcType$4(crypto.AggregateKeys) }, { k: "sha256", v: new funcType$1(crypto.Sha256) }, { k: "sha512", v: new funcType$1(crypto.Sha512) }]), mapType);
 	};
 	$init = function() {
 		$pkg.$init = function() {};

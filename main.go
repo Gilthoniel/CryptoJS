@@ -12,7 +12,8 @@ import (
 func main() {
     js.Global.Set("cryptoJS", map[string]interface{}{
         "keyPair": crypto.KeyPairEdDSA,
-        "keyPairPublic": crypto.KeyPairPublic,
+        "keyPairFromPrivate": crypto.KeyPairFromPrivate,
+        "publicKey": crypto.PublicKey,
         "sign": crypto.Sign,
         "verify": crypto.Verify,
         "aggregateKeys": crypto.AggregateKeys,

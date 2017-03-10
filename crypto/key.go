@@ -5,20 +5,31 @@ import (
     "github.com/dedis/crypto/ed25519"
 )
 
-// Return a byte array representation of the key pair
+// Generate an EdDSA and return the marshal binary data
 func KeyPairEdDSA() []byte {
     e := eddsa.NewEdDSA(nil)
 
-    result, _ := e.Secret.MarshalBinary()
+    result, _ := e.MarshalBinary()
     return result
 }
 
-func KeyPairPublic(secret []byte) []byte {
-    stream := ConstantStream(secret)
-    e := eddsa.NewEdDSA(stream)
+// Build a marshal binary of an EdDSA from a simple private key
+func KeyPairFromPrivate(privateKey []byte) []byte {
+    // Build the marshal binary without public key as we don't have it
+    buf := make([]byte, 64)
+    copy(buf[:32], privateKey)
 
-    result, _ := e.Public.MarshalBinary()
+    // Use it to instantiate a new EdDSA
+    e := &eddsa.EdDSA{}
+    e.UnmarshalBinary(buf)
+
+    result, _ := e.MarshalBinary()
     return result
+}
+
+// Extract the public key from the marshal
+func PublicKey(marshal []byte) []byte {
+    return marshal[32:]
 }
 
 // Aggregate the given public keys in one single key
