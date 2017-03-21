@@ -19,5 +19,7 @@ func main() {
         "aggregateKeys": crypto.AggregateKeys,
         "sha256": crypto.Sha256,
         "sha512": crypto.Sha512,
+        "hashSkipBlock": crypto.HashSkipBlock,
+        "verifyForwardLink": crypto.VerifyForwardLink,
     })
 }
