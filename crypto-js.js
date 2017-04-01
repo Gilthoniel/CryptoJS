@@ -28662,25 +28662,25 @@ $packages["github.com/dedis/crypto-js/crypto"] = (function() {
 				_i$1++;
 			/* } */ $s = 6; continue; case 7:
 		/* } */ case 5:
-		/* */ if (!(block.GenesisID === undefined)) { $s = 9; continue; }
+		/* */ if (!(block.VerifierIDs === undefined)) { $s = 9; continue; }
 		/* */ $s = 10; continue;
-		/* if (!(block.GenesisID === undefined)) { */ case 9:
-			_r$2 = hash.Write($assertType($internalize(block.GenesisID, $emptyInterface), sliceType)); /* */ $s = 11; case 11: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			_r$2;
-		/* } */ case 10:
-		/* */ if (!(block.RespPublic === undefined)) { $s = 12; continue; }
-		/* */ $s = 13; continue;
-		/* if (!(block.RespPublic === undefined)) { */ case 12:
-			_ref$2 = $assertType($internalize(block.RespPublic, $emptyInterface), sliceType$2);
+		/* if (!(block.VerifierIDs === undefined)) { */ case 9:
+			_ref$2 = $assertType($internalize(block.VerifierIDs, $emptyInterface), sliceType$2);
 			_i$2 = 0;
-			/* while (true) { */ case 14:
-				/* if (!(_i$2 < _ref$2.$length)) { break; } */ if(!(_i$2 < _ref$2.$length)) { $s = 15; continue; }
+			/* while (true) { */ case 11:
+				/* if (!(_i$2 < _ref$2.$length)) { break; } */ if(!(_i$2 < _ref$2.$length)) { $s = 12; continue; }
 				i$2 = ((_i$2 < 0 || _i$2 >= _ref$2.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$2.$array[_ref$2.$offset + _i$2]);
-				_r$3 = hash.Write($assertType(i$2, sliceType)); /* */ $s = 16; case 16: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-				_r$3;
+				_r$2 = hash.Write($assertType(i$2, sliceType)); /* */ $s = 13; case 13: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+				_r$2;
 				_i$2++;
-			/* } */ $s = 14; continue; case 15:
-		/* } */ case 13:
+			/* } */ $s = 11; continue; case 12:
+		/* } */ case 10:
+		/* */ if (!(block.GenesisID === undefined)) { $s = 14; continue; }
+		/* */ $s = 15; continue;
+		/* if (!(block.GenesisID === undefined)) { */ case 14:
+			_r$3 = hash.Write($assertType($internalize(block.GenesisID, $emptyInterface), sliceType)); /* */ $s = 16; case 16: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			_r$3;
+		/* } */ case 15:
 		/* */ if (!(block.Roster === undefined) && !(block.Roster.list === undefined)) { $s = 17; continue; }
 		/* */ $s = 18; continue;
 		/* if (!(block.Roster === undefined) && !(block.Roster.list === undefined)) { */ case 17:

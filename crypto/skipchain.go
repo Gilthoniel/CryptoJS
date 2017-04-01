@@ -27,15 +27,14 @@ func HashSkipBlock(block *js.Object) []byte {
 		}
 	}
 
-	if block.Get("GenesisID") != js.Undefined {
-		hash.Write(block.Get("GenesisID").Interface().([]byte))
-	}
-
-	// Add the resp. public key in the hash
-	if block.Get("RespPublic") != js.Undefined {
-		for _, i := range block.Get("RespPublic").Interface().([]interface{}) {
+	if block.Get("VerifierIDs") != js.Undefined {
+		for _, i := range block.Get("VerifierIDs").Interface().([]interface{}) {
 			hash.Write(i.([]byte))
 		}
+	}
+
+	if block.Get("GenesisID") != js.Undefined {
+		hash.Write(block.Get("GenesisID").Interface().([]byte))
 	}
 
 	// Add the public key of the roster in the hash
