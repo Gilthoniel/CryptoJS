@@ -1,4 +1,4 @@
-import './CryptoJS'
+import './crypto-js'
 import ByteBuffer from 'bytebuffer'
 
 window.crypto = {
@@ -209,14 +209,13 @@ describe('crypto-js', () => {
         expect(buf2hex(buf)).toBe(correctHash);
     });
 
-    it('should create and verify schnorr', () => {
+    // TODO: once implement 'schnorrVerify' adapt this test
+    it('should create a schnorr signature', () => {
         const buf = cryptoJS.hashConfig(MOCK_CONFIG);
 
         const keyPair = cryptoJS.keyPair();
-        const sig = cryptoJS.schnorrVerify(keyPair, buf);
-        expect(sig).toBe(true);
-
-        //expect(cryptoJS.schnorrVerify(keyPair, buf, sig)).toBe(true);
+        const sig = cryptoJS.schnorrSign(keyPair, buf);
+        expect(sig.length).toBe(64);
     });
 });
 

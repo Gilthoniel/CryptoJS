@@ -69,39 +69,22 @@ func SchnorrSignature(keyPair, msg []byte) []byte {
 	return append(e.Bytes(), s.Bytes()...)
 }
 
-// TODO: Extract challenge and response from byte array (change parameters)
-func SchnorrVerify(keyPair, msg []byte) bool {
-
-	key := eddsa.NewEdDSA(nil)
-	key.UnmarshalBinary(keyPair)
+// TODO: Extract challenge (e) and response (s) from byte array
+/*
+func SchnorrVerify(keyPair, msg, signature []byte) bool {
 
 	suite := ed25519.NewAES128SHA256Ed25519(false)
 
-	k := suite.Scalar().Pick(random.Stream)
-	r := suite.Point().Mul(nil, k)
-
-	// [call to hash] ...compute challenge 'e'
-	rBuf, _ := r.MarshalBinary()
-	cipher := suite.Cipher(rBuf)
-	cipher.Message(nil, nil, msg)
-	e := suite.Scalar().Pick(cipher)
-
-	// Compute response 's'
-	xe := suite.Scalar().Mul(key.Secret, e)
-	s := suite.Scalar().Sub(k, xe)
-
-	//********************* Verify **************************
-	suite2 := ed25519.NewAES128SHA256Ed25519(false)
-
-	gs := suite2.Point().Mul(nil, s)
-	ye := suite2.Point().Mul(key.Public, e)
-	rv := suite2.Point().Add(gs, ye)
+	gs := suite.Point().Mul(nil, s)
+	ye := suite.Point().Mul(key.Public, e)
+	rv := suite.Point().Add(gs, ye)
 
 	// [call to hash]'
 	rBuf2, _ := rv.MarshalBinary()
-	cipher2 := suite2.Cipher(rBuf2)
+	cipher2 := suite.Cipher(rBuf2)
 	cipher2.Message(nil, nil, msg)
-	er := suite2.Scalar().Pick(cipher2)
+	er := suite.Scalar().Pick(cipher2)
 
 	return er.Equal(e)
 }
+*/

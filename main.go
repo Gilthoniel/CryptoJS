@@ -23,6 +23,5 @@ func main() {
         "verifyForwardLink": crypto.VerifyForwardLink,
         "hashConfig": crypto.HashConfig,
         "schnorrSign": crypto.SchnorrSignature,
-        "schnorrVerify": crypto.SchnorrVerify,
     })
 }
