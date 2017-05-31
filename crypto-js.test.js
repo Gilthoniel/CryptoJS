@@ -185,6 +185,38 @@ describe('crypto-js', () => {
     expect(res).toBeFalsy();
   });
 
+    const MOCK_CONFIG = {
+        "threshold": 2,
+        "device": {
+          "aPgDeveloper": {
+            "point": hex2buf("c8f2e6394d1f592f04de9a0d6a64394219f980933ded57e14eefd53f48496b19")
+          },
+          "icsil1-conode1": {
+            "point": hex2buf("367a2c5f9b6cf1df979e8a27af505dc97de62e34d8075ad4f1731a8734dce961")
+          }
+        },
+        "data": {
+          "ssh:icsil1-conode1:test": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9YffkNEgfHidbmKkCwkNEKPqHFoSQCYuVDS/UNjKmsASmhNoCSr2XbgIlM09ngjX2nyZWi3MA/cbFMaUy2KGqj0s9fuBM+4LiIV43QOzvU1X9NlFuP4Iaud8VNedR403fbBXVh77zMby51MJuQx1IIdo19NImSZZD1eAGwdyXbVO+GMFSBS18CR35K1DxB83YIs0N8qhKDNjrb5POMrEqH7/SVUvPG94StwYGkJ5U2kpdx0CYg09JZpR4RVEncF7p3hIcEORTroejQohK/ggNjk079FDJbTinC5pjBnMBxp0rYiTRtXcZnoApsuq6Eyz70ujIAOz2YbRHORknnEOv",
+          "ssh:aPGD:server": "64293608bc23f08d215742980accdff44a1e04b5abb32b5ede1299827c20a090c7d99fab6af2786902ea849dd62b764ad9747f3dc307038179f1a49013565340"
+        }
+    };
+
+    const correctHash = '5fd28ebba0dfd00b3540a5b27b0bd40f17c0b81a025b301a0cae6aff88edbcf0';
+
+    it('should hash config', () => {
+        const buf = cryptoJS.hashConfig(MOCK_CONFIG);
+
+        expect(buf2hex(buf)).toBe(correctHash);
+    });
+
+    // TODO: once implement 'schnorrVerify' adapt this test
+    it('should create a schnorr signature', () => {
+        const buf = cryptoJS.hashConfig(MOCK_CONFIG);
+
+        const keyPair = cryptoJS.keyPair();
+        const sig = cryptoJS.schnorrSign(keyPair, buf);
+        expect(sig.length).toBe(64);
+    });
 });
 
 function hex2buf(hex) {

@@ -2,7 +2,7 @@ package main
 
 import (
     "github.com/gopherjs/gopherjs/js"
-    "github.com/dedis/crypto-js/crypto"
+    "./crypto"
 )
 
 /**
@@ -21,5 +21,7 @@ func main() {
         "sha512": crypto.Sha512,
         "hashSkipBlock": crypto.HashSkipBlock,
         "verifyForwardLink": crypto.VerifyForwardLink,
+        "hashConfig": crypto.HashConfig,
+        "schnorrSign": crypto.SchnorrSignature,
     })
 }
